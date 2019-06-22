@@ -160,8 +160,6 @@ operador_binario
     | <assoc=right> MINUS
     | TIMES
     | DIV
-    | PLUS
-    | MINUS
     | MOD
     | LT
     | LEQ
