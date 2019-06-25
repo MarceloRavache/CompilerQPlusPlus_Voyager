@@ -1,4 +1,4 @@
 package ast;
 
-public class Tipo {
+public abstract class Tipo {
 }

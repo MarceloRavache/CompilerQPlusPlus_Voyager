@@ -1,4 +1,5 @@
 package ast;
 
-public class Qualificador {
+public enum Qualificador {
+    CONST
 }

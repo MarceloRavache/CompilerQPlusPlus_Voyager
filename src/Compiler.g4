@@ -1,40 +1,25 @@
 grammar Compiler;
 
-start : lista_definicoes EOF;
-
-lista_definicoes
-    : lista_definicoes definicao
-    | definicao
-    ;
+start : definicao* EOF;
 
 definicao
-    : funcao
-    | estrutura
+    : funcao #Func
+    | estrutura #Estru
     ;
 
-estrutura : STRUCT ID LBRACE lista_estrutura_corpo RBRACE SEMI;
-
-lista_estrutura_corpo
-    : lista_estrutura_corpo estrutura_acesso
-    | estrutura_acesso
-    ;
+estrutura : STRUCT ID LBRACE estrutura_acesso* RBRACE SEMI;
 
 estrutura_acesso
-    : PUBLIC COLON lista_estrutura_membros
-    | PROTECTED COLON lista_estrutura_membros
-    ;
-
-lista_estrutura_membros
-    : lista_estrutura_membros membro
-    | membro
+    : PUBLIC COLON membro*  #PublicEstr
+    | PROTECTED COLON membro*   #ProtectedEstr
     ;
 
 membro
-    : construtor
-    | variavel
-    | metodo
-    | STATIC variavel
-    | STATIC funcao
+    : construtor    #ConstrutorFunc
+    | variavel      #VariavelFunc
+    | metodo        #MetodoFunc
+    | STATIC variavel   #VarStatic
+    | STATIC funcao     #FuncStatic
     ;
 
 variavel : tipo ID SEMI;
@@ -47,66 +32,66 @@ metodo : funcao_cabecalho qualificador bloco;
 
 funcao : funcao_cabecalho bloco;
 
-funcao_cabecalho : tipo ID LPAREN parametros_formais RPAREN;
+funcao_cabecalho : tipo ID LPAREN lista_parametros_formais RPAREN;
 
 parametros_formais
-    : lista_parametros_formais
-    | 
+    : lista_parametros_formais      #FormParam
+    | #FormEmpyParam
     ;
 
 lista_parametros_formais
-    : lista_parametros_formais COMMA tipo ID
-    | tipo ID
+    : lista_parametros_formais COMMA tipo ID        #FormParamListId
+    | tipo ID   #FormParamId
     ;
 
 tipo
-    : VOID
-    | qualificador INT decorador
-    | qualificador CHAR decorador
-    | qualificador BOOL decorador
-    | qualificador tipo_nome decorador
+    : VOID #VoidExpr
+    | qualificador INT decorador #IntExpr
+    | qualificador CHAR decorador #CharExpr
+    | qualificador BOOL decorador #BoolExpr
+    | qualificador tipo_nome decorador #ObjectExpr
     ;
 
 tipo_nome
-    : tipo_nome DBLCOL ID
-    | ID
+    : tipo_nome DBLCOL ID #ChamadaMultID
+    | ID #ChamadaID
     ;
 
 qualificador
-    : CONST
-    | 
+    : CONST #ConstQuali
+    | #EmptyQuali
     ;
 
 decorador
-    : AMPER
-    |
+    : AMPER #AmperDecor
+    | #EmptyDecor
     ;
 
 bloco : LBRACE lista_declaracoes_locais lista_comandos RBRACE;
 
 lista_comandos
-    : lista_comandos comando
-    | comando
-    |
+    : lista_comandos comando #MultCommand
+    | comando #Command
+    | #CommandEmpty
     ;
 
 comando
-    : bloco
-    | selecao
-    | repeticao
-    | atribuicao
-    | retorno
-    | entrada
-    | saida
-    | expressao_comando
-    | BREAK SEMI
+    : bloco #CommandBloco
+    | selecao #CommandSelecao
+    | repeticao #CommandRepeticao
+    | atribuicao #CommandAtrib
+    | retorno #CommandRet
+    | entrada #CommandIn
+    | saida #CommandOut
+    | expressao_comando #CommandExpr
+    | BREAK SEMI #CommandFim
     ;
 
-selecao : IF LPAREN expressao RPAREN <lista_comandos> selecao_senao;
+selecao : IF LPAREN expressao RPAREN lista_comandos selecao_senao;
 
 selecao_senao
-    : ELSE lista_comandos
-    | 
+    : ELSE lista_comandos #SenaoExpr
+    | #SenaoVazio
     ;
 
 repeticao : WHILE LPAREN expressao RPAREN lista_comandos;
@@ -115,90 +100,82 @@ atribuicao : nome ATRIB expressao SEMI;
 
 retorno : RETURN expressao_comando;
 
-entrada : STDCIN lista_entrada_params SEMI;
+entrada : STDCIN (RSHIFT parametro_entrada)+ SEMI;
 
-lista_entrada_params
-    : lista_entrada_params RSHIFT nome
-    | nome
-    | STDENDL
+parametro_entrada
+    : nome #NomeParamEntrada
+    | STDENDL #EndlParamEntrada
     ;
 
-saida : STDCOUT lista_saida_params SEMI;
+saida : STDCOUT (LSHIFT parametro_saida)+ SEMI;
 
-lista_saida_params
-    : lista_saida_params LSHIFT expressao
-    | expressao
-    | STRL
-    | STDENDL
+parametro_saida
+    : expressao #ExprParamSaida
+    | STRL #StringParamSaida
+    | STDENDL #EndlParamSaida
     ;
 
 lista_declaracoes_locais
-    : variavel
-    | variavel_atribuicao
-    | 
+    : variavel #VariavelDecl
+    | variavel_atribuicao #VariavelAtribDecl
+    | #VariavelVazio
     ;
 
 expressao_comando
-    : expressao SEMI
-    | SEMI
+    : expressao SEMI #ReturnExpr
+    | SEMI #ReturnEmpty
     ;
 
 expressao
-    : LPAREN expressao RPAREN
-    | expressao operador_binario expressao
-    | operador_unario expressao
-    | nome LPAREN parametros_reais RPAREN
-    | nome
-    | INTL
-    | CHARL
-    | TRUE
-    | FALSE
+    : LPAREN expressao RPAREN   #ParemExpr
+    | expressao operador_binario expressao  #OpBinExpr
+    | operador_unario expressao #OpUnExpr
+    | nome LPAREN parametros_reais RPAREN   #FuncCallExpr
+    | nome #NomeExpr
+    | INTL #IntlExpr
+    | CHARL #CharlExpr
+    | TRUE #TrueExpr
+    | FALSE #FalseExpr
     ;
 
 operador_binario
-    : <assoc=right> PLUS
-    | <assoc=right> MINUS
-    | TIMES
-    | DIV
-    | MOD
-    | LT
-    | LEQ
-    | GT
-    | GEQ
-    | EQ
-    | OR
-    | AND
-    | NEQ
+    : <assoc=right> PLUS #PlusExpr
+    | <assoc=right> MINUS #MinusExprBinario
+    | TIMES #TimesExpr
+    | DIV #DivExpr
+    | MOD #ModExpr
+    | LT #LtExpr
+    | LEQ #LeqExpr
+    | GT #GtExpr
+    | GEQ #GeqExpr
+    | EQ #EqExpr
+    | OR #OrExpr
+    | AND #AndExpr
+    | NEQ #NeqExpr
     ;
 
 operador_unario
-    : <assoc=right> NOT
-    | INCR
-    | DECR
-    | MINUS
-    | NOT
+    : <assoc=right> NOT #NotExpr
+    | INCR #IncrExpr
+    | DECR #DecrExpr
+    | MINUS #MinusExprUnario
     ;
 
 nome
-    : ID DBLCOL nome_lista
-    | THIS ARROW nome_lista
-    | nome_lista
+    : ID DBLCOL nome_lista #ChamadaDeClasse
+    | THIS ARROW nome_lista #ChamadaDePonteiro
+    | nome_lista    #NomeList
     ;
 
 nome_lista
-    : ID DOT nome_lista
-    | ID LPAREN parametros_reais RPAREN DOT nome_lista
-    | ID
+    : ID DOT nome_lista #AcessoVariavel
+    | ID LPAREN parametros_reais RPAREN DOT nome_lista #AcessoFunc
+    | ID #AcessoFinal
     ;
 
-parametros_reais
-    : lista_parametros_reais
-    | 
-    ;
-
-lista_parametros_reais
-    : lista_parametros_reais COMMA expressao
-    | expressao
+parametros_reais  //resumir
+    : expressao (COMMA expressao)* #ParamReaisExpr
+    | #VazioExpr
     ;
 
 IF: 'if';

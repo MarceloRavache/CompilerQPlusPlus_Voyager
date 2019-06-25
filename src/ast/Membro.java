@@ -1,4 +1,5 @@
 package ast;
 
-public class Membro {
+public abstract class Membro extends EstruturaAcesso {
+
 }

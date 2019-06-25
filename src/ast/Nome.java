@@ -1,4 +1,4 @@
 package ast;
 
-public class Nome {
+public abstract class Nome {
 }

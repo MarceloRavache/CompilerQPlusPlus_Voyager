@@ -1,4 +1,5 @@
 package ast;
 
-public class Decorador {
+public enum Decorador {
+    AMPER
 }
