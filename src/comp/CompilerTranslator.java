@@ -38,7 +38,7 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
 
     @Override
     public TreeNode visitEstrutura(CompilerParser.EstruturaContext ctx) {
-
+        return super.visitEstrutura(ctx);
 
     }
 
