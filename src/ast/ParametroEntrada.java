@@ -1,5 +1,5 @@
 package ast;
 
-public abstract class ParametroEntrada{
+public abstract class ParametroEntrada extends TreeNode{
 
 }

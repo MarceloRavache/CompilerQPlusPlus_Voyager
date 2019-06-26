@@ -152,7 +152,7 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
 
     @Override
     public TreeNode visitVoidExpr(CompilerParser.VoidExprContext ctx) {
-        return new VoidExpr();
+        return super.visitVoidExpr(ctx);
     }
 
     @Override
@@ -270,7 +270,7 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
     @Override
     public TreeNode visitCommandExpr(CompilerParser.CommandExprContext ctx) {
 
-        return CommandExpr((ExpressaoComando) visit(ctx.expressao_comando()));
+        return new CommandExpr((ExpressaoComando) visit(ctx.expressao_comando()));
     }
 
     @Override
@@ -391,7 +391,7 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
     @Override
     public TreeNode visitIntlExpr(CompilerParser.IntlExprContext ctx) {
 
-        return new IntlExpr((Integer) visit(ctx.INTL().getText()));
+        return new IntlExpr((Integer) visit(ctx.INTL().getText());
 
     }
 
@@ -426,72 +426,94 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
 
     @Override
     public TreeNode visitPlusExpr(CompilerParser.PlusExprContext ctx) {
-        return super.visitPlusExpr(ctx);
+
+        return new PlusExpr(new OperadorBinarioEnum("PLUS"));
     }
 
     @Override
     public TreeNode visitMinusExprBinario(CompilerParser.MinusExprBinarioContext ctx) {
-        return super.visitMinusExprBinario(ctx);
+        return new MinusExprBinario(new OperadorBinarioEnum("MINUS"));
     }
 
     @Override
     public TreeNode visitTimesExpr(CompilerParser.TimesExprContext ctx) {
-        return super.visitTimesExpr(ctx);
+        return new TimesExpr(new OperadorBinarioEnum("TIMES"));
     }
 
     @Override
     public TreeNode visitDivExpr(CompilerParser.DivExprContext ctx) {
-        return super.visitDivExpr(ctx);
+
+        return new DivExpr(new OperadorBinarioEnum("DIV"));
     }
 
     @Override
     public TreeNode visitModExpr(CompilerParser.ModExprContext ctx) {
-        return super.visitModExpr(ctx);
+
+        return new ModExpr(new OperadorBinarioEnum("MOD"));
+
     }
 
     @Override
     public TreeNode visitLtExpr(CompilerParser.LtExprContext ctx) {
-        return super.visitLtExpr(ctx);
+
+        return new LtExpr(new OperadorBinarioEnum("LT"));
+
     }
 
     @Override
     public TreeNode visitLeqExpr(CompilerParser.LeqExprContext ctx) {
-        return super.visitLeqExpr(ctx);
+
+        return new LeqExpr(new OperadorBinarioEnum("LEQ"));
+
     }
 
     @Override
     public TreeNode visitGtExpr(CompilerParser.GtExprContext ctx) {
-        return super.visitGtExpr(ctx);
+
+        return new GtExpr(new OperadorBinarioEnum("GT"));
+
     }
 
     @Override
     public TreeNode visitGeqExpr(CompilerParser.GeqExprContext ctx) {
-        return super.visitGeqExpr(ctx);
+
+        return new GeqExpr(new OperadorBinarioEnum("GEQ"));
+
     }
 
     @Override
     public TreeNode visitEqExpr(CompilerParser.EqExprContext ctx) {
-        return super.visitEqExpr(ctx);
+
+        return new EqExpr(new OperadorBinarioEnum("EQ"));
+
     }
 
     @Override
     public TreeNode visitOrExpr(CompilerParser.OrExprContext ctx) {
-        return super.visitOrExpr(ctx);
+
+        return new OrExpr(new OperadorBinarioEnum("OR"));
+
     }
 
     @Override
     public TreeNode visitAndExpr(CompilerParser.AndExprContext ctx) {
-        return super.visitAndExpr(ctx);
+
+        return new AndExpr(new OperadorBinarioEnum("AND"));
+
     }
 
     @Override
     public TreeNode visitNeqExpr(CompilerParser.NeqExprContext ctx) {
-        return super.visitNeqExpr(ctx);
+
+        return new NeqExpr(new OperadorBinarioEnum("NEQ"));
+
     }
 
     @Override
     public TreeNode visitNotExpr(CompilerParser.NotExprContext ctx) {
-        return super.visitNotExpr(ctx);
+
+        return new NotExpr(new OperadorUnarioEnum("NOT"));
+
     }
 
     @Override
@@ -547,13 +569,13 @@ public class CompilerTranslator extends CompilerBaseVisitor<TreeNode> {
         ArrayList<Expression> lista = new ArrayList<>();
         if(ctx.expressao().size() > 0){
 
-            for (CompilerParser.ParamReaisExprContext def : ctx.expressao()) {
+            for (CompilerParser.ExpressaoContext def : ctx.expressao()) {
                 lista.add((Expression) visit(def));
             }
             return new ProtectedEstr((Expression) visit(ctx.expressao()),lista);
 
         }
-        return new ProtectedEstr(lista);
+        return new ProtectedEstr((Expression) visit(ctx.expressao()));
     }
 
     @Override

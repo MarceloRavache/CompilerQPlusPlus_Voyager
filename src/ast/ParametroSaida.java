@@ -1,4 +1,4 @@
 package ast;
 
-public abstract class ParametroSaida {
+public abstract class ParametroSaida extends TreeNode{
 }

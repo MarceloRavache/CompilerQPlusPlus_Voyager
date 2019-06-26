@@ -1,6 +1,6 @@
 package ast;
 
-public class Variavel_atribuicao {
+public class Variavel_atribuicao extends TreeNode{
     private final Tipo tipo;
     private final Expression expression;
     public Variavel_atribuicao(Tipo tipo,Expression expression){

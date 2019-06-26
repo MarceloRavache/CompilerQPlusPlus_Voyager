@@ -1,9 +1,8 @@
 package ast;
 
-public enum OperadorBinarioEnum {
-    PLUS,
-    MINUS,
-    TIMES,
-    DIV,
-    MOD
+public class OperadorBinarioEnum extends TreeNode{
+    private final String op;
+    public OperadorBinarioEnum(String op){
+        this.op = op;
+    }
 }

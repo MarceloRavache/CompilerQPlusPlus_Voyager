@@ -1,4 +1,4 @@
 package ast;
 
-public abstract class Tipo {
+public abstract class Tipo extends TreeNode{
 }

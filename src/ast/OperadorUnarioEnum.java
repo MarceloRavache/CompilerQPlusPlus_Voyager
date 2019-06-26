@@ -1,8 +1,8 @@
 package ast;
 
-public enum OperadorUnarioEnum {
-    NOT,
-    INCR,
-    DECR,
-    MINUS
+public class OperadorUnarioEnum extends TreeNode{
+    private final String op;
+    public OperadorUnarioEnum(String op){
+        this.op = op;
+    }
 }

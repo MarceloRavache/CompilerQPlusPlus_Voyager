@@ -1,5 +1,4 @@
 package ast;
 
-public enum Decorador {
-    AMPER
+public abstract class Decorador extends TreeNode{
 }

@@ -1,4 +1,4 @@
 package ast;
 
-public class ListaParametrosFormais {
+public abstract class ListaParametrosFormais extends TreeNode{
 }

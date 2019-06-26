@@ -1,5 +1,4 @@
 package ast;
 
-public enum Qualificador {
-    CONST
+public abstract class Qualificador extends TreeNode{
 }

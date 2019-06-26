@@ -1,4 +1,4 @@
 package ast;
 
-public class Retorno {
+public abstract class Retorno extends TreeNode{
 }
